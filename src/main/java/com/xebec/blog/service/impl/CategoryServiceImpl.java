@@ -3,6 +3,7 @@ package com.xebec.blog.service.impl;
 import com.xebec.blog.dto.CategoryDto;
 import com.xebec.blog.dto.CreateCategoryRequest;
 import com.xebec.blog.entity.Category;
+import com.xebec.blog.exception.ResourceNotFoundException;
 import com.xebec.blog.mapper.CategoryMapper;
 import com.xebec.blog.repository.CategoryRepository;
 import com.xebec.blog.service.CategoryService;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +42,18 @@ public class CategoryServiceImpl implements CategoryService {
                 .stream()
                 .map(categoryMapper::toDto)
                 .toList();
+    }
+
+    @Override
+    @Transactional
+    public void deleteCategory(UUID id) {
+        Optional<Category> category = categoryRepository.findById(id);
+        if(category.isPresent()) {
+            if(!category.get().getPosts().isEmpty()) {
+                throw new IllegalStateException("Category has posts associated with it");
+            }
+            categoryRepository.deleteById(id);
+        }
     }
 
 }
