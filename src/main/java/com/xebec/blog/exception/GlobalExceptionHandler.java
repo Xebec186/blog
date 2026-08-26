@@ -84,8 +84,7 @@ public class GlobalExceptionHandler {
             BadCredentialsException ex,
             HttpServletRequest request) {
 
-        ErrorResponse error = ErrorResponse
-                .builder()
+        ErrorResponse error = ErrorResponse.builder()
                 .message("Incorrect username or password")
                 .path(request.getRequestURI())
                 .status(HttpStatus.UNAUTHORIZED.value())
