@@ -33,7 +33,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<TagDto> getAllTags() {
-        return tagRepository.findAll().stream()
+        return tagRepository.findAllWithPosts().stream()
                 .map(tagMapper::toDto)
                 .toList();
     }
