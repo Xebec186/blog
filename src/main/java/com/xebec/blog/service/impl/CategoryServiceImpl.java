@@ -3,7 +3,6 @@ package com.xebec.blog.service.impl;
 import com.xebec.blog.dto.CategoryDto;
 import com.xebec.blog.dto.CreateCategoryRequest;
 import com.xebec.blog.entity.Category;
-import com.xebec.blog.exception.ResourceNotFoundException;
 import com.xebec.blog.mapper.CategoryMapper;
 import com.xebec.blog.repository.CategoryRepository;
 import com.xebec.blog.service.CategoryService;
