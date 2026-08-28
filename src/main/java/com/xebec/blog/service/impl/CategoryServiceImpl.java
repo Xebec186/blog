@@ -49,7 +49,7 @@ public class CategoryServiceImpl implements CategoryService {
         Optional<Category> category = categoryRepository.findById(id);
         if(category.isPresent()) {
             if(!category.get().getPosts().isEmpty()) {
-                throw new IllegalStateException("Category has posts associated with it");
+                throw new IllegalStateException("Cannot delete category with posts");
             }
             categoryRepository.deleteById(id);
         }
