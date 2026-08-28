@@ -1,6 +1,5 @@
 package com.xebec.blog.mapper;
 
-import com.xebec.blog.dto.CreateTagRequest;
 import com.xebec.blog.dto.TagDto;
 import com.xebec.blog.entity.Post;
 import com.xebec.blog.entity.Tag;
@@ -14,8 +13,6 @@ import java.util.Set;
 
 @Mapper(componentModel = "spring", unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface TagMapper {
-
-    Tag toEntity(CreateTagRequest createTagRequest);
 
     @Mapping(target = "postCount", source = "posts", qualifiedByName = "calculatePostCount")
     TagDto toDto(Tag tag);

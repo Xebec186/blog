@@ -1,6 +1,6 @@
 package com.xebec.blog.controller;
 
-import com.xebec.blog.dto.CreateTagRequest;
+import com.xebec.blog.dto.CreateTagsRequest;
 import com.xebec.blog.dto.TagDto;
 import com.xebec.blog.service.TagService;
 import jakarta.validation.Valid;
@@ -19,9 +19,9 @@ public class TagController {
     private final TagService tagService;
 
     @PostMapping
-    public ResponseEntity<TagDto> createTag(@Valid @RequestBody CreateTagRequest createTagRequest) {
-       TagDto createdTag = tagService.createTag(createTagRequest);
-       return new ResponseEntity<>(createdTag, HttpStatus.CREATED);
+    public ResponseEntity<List<TagDto>> createTags(@Valid @RequestBody CreateTagsRequest createTagsRequest) {
+       List<TagDto> createdTags = tagService.createTags(createTagsRequest);
+       return new ResponseEntity<>(createdTags, HttpStatus.CREATED);
     }
 
     @GetMapping
