@@ -7,4 +7,5 @@ import java.util.UUID;
 
 public interface PostService {
     List<PostDto> getAllPosts(UUID categoryId, UUID tagId);
+    List<PostDto> getUserDraftPosts(UUID userId);
 }

@@ -42,4 +42,12 @@ public class PostServiceImpl implements PostService {
                 .map(postMapper::toDto)
                 .toList();
     }
+
+    @Override
+    public List<PostDto> getUserDraftPosts(UUID userId) {
+         return postRepository.findAllByStatusAndAuthorId(PostStatus.DRAFT, userId)
+                .stream()
+                .map(postMapper::toDto)
+                .toList();
+    }
 }
