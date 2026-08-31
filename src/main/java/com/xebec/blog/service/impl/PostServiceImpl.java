@@ -27,6 +27,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
 
+    private static final int WORDS_PER_MINUTE = 200;
+
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
@@ -94,6 +96,8 @@ public class PostServiceImpl implements PostService {
     }
 
     private Integer calculateReadingTime(String content) {
-        return 0;
+        if(content == null || content.isEmpty()) return 0;
+        int wordCount = content.trim().split("\\s+").length;
+        return (int) Math.ceil((double) wordCount / WORDS_PER_MINUTE);
     }
 }
