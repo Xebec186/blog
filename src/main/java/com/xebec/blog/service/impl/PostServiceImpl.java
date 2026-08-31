@@ -1,22 +1,64 @@
 package com.xebec.blog.service.impl;
 
+import com.xebec.blog.dto.CreatePostRequest;
 import com.xebec.blog.dto.PostDto;
+import com.xebec.blog.entity.Category;
+import com.xebec.blog.entity.Post;
+import com.xebec.blog.entity.Tag;
+import com.xebec.blog.entity.User;
 import com.xebec.blog.enums.PostStatus;
+import com.xebec.blog.exception.ResourceNotFoundException;
 import com.xebec.blog.mapper.PostMapper;
+import com.xebec.blog.repository.CategoryRepository;
 import com.xebec.blog.repository.PostRepository;
+import com.xebec.blog.repository.TagRepository;
+import com.xebec.blog.repository.UserRepository;
 import com.xebec.blog.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
+    private final TagRepository tagRepository;
     private final PostMapper postMapper;
+
+    @Override
+    public PostDto createPost(CreatePostRequest createPostRequest, UUID userId) {
+        User author = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with given id: " + userId));
+
+        UUID categoryId = createPostRequest.getCategoryId();
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with given id: " + categoryId));
+
+        List<Tag> tagsList = tagRepository.findAllById(createPostRequest.getTagIds());
+        Set<Tag> tagsSet = new HashSet<>(tagsList);
+
+        Post post = Post.builder()
+                .title(createPostRequest.getTitle())
+                .content(createPostRequest.getContent())
+                .status(createPostRequest.getStatus())
+                .readingTime(calculateReadingTime(createPostRequest.getContent()))
+                .author(author)
+                .category(category)
+                .tags(tagsSet)
+                .build();
+
+        Post createdPost = postRepository.save(post);
+
+        return postMapper.toDto(createdPost);
+    }
 
     @Override
     public List<PostDto> getAllPosts(UUID categoryId, UUID tagId) {
@@ -49,5 +91,9 @@ public class PostServiceImpl implements PostService {
                 .stream()
                 .map(postMapper::toDto)
                 .toList();
+    }
+
+    private Integer calculateReadingTime(String content) {
+        return 0;
     }
 }
