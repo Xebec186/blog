@@ -22,7 +22,7 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping
-    public ResponseEntity<PostDto> createPost(@RequestBody CreatePostRequest createPostRequest,
+    public ResponseEntity<PostDto> createPost(@RequestBody @Valid CreatePostRequest createPostRequest,
                                               @AuthenticationPrincipal BlogUserDetails blogUserDetails) {
         UUID userId = blogUserDetails.getUser().getId();
         PostDto createdPost = postService.createPost(createPostRequest, userId);
@@ -61,7 +61,7 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePost(UUID id) {
+    public ResponseEntity<Void> deletePost(@PathVariable UUID id) {
         postService.deletePost(id);
         return ResponseEntity.noContent().build();
     }
