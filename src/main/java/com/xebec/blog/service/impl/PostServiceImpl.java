@@ -139,9 +139,11 @@ public class PostServiceImpl implements PostService {
         postRepository.delete(post);
     }
 
-    private Integer calculateReadingTime(String content) {
-        if(content == null || content.isEmpty()) return 0;
+    private int calculateReadingTime(String content) {
+        if(content == null || content.isBlank()) {
+            return 0;
+        }
         int wordCount = content.trim().split("\\s+").length;
-        return (int) Math.ceil((double) wordCount / WORDS_PER_MINUTE);
+        return (wordCount + WORDS_PER_MINUTE - 1) / WORDS_PER_MINUTE;
     }
 }
