@@ -13,4 +13,5 @@ public interface PostService {
     List<PostDto> getAllPosts(UUID categoryId, UUID tagId);
     List<PostDto> getUserDraftPosts(UUID userId);
     PostDto updatePost(UUID id, UpdatePostRequest updatePostRequest);
+    void deletePost(UUID id);
 }

@@ -60,4 +60,10 @@ public class PostController {
 
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePost(UUID id) {
+        postService.deletePost(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

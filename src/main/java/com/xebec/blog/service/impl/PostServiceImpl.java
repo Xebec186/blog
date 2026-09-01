@@ -132,6 +132,13 @@ public class PostServiceImpl implements PostService {
         return postMapper.toDto(updatedPost);
     }
 
+    @Override
+    public void deletePost(UUID id) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found with given id: " + id));
+        postRepository.delete(post);
+    }
+
     private Integer calculateReadingTime(String content) {
         if(content == null || content.isEmpty()) return 0;
         int wordCount = content.trim().split("\\s+").length;
