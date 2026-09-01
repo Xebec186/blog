@@ -64,6 +64,13 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public PostDto getPost(UUID id) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found with given id: " + id));
+        return postMapper.toDto(post);
+    }
+
+    @Override
     public List<PostDto> getAllPosts(UUID categoryId, UUID tagId) {
         if(categoryId != null && tagId != null) {
            return postRepository.findAllByStatusAndCategoryIdAndTags_Id(PostStatus.PUBLISHED, categoryId, tagId).stream()

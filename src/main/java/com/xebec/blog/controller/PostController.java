@@ -29,6 +29,12 @@ public class PostController {
         return ResponseEntity.ok(createdPost);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<PostDto> getPost(@PathVariable UUID id) {
+       PostDto post = postService.getPost(id);
+       return ResponseEntity.ok(post);
+    }
+
     @GetMapping
     public ResponseEntity<List<PostDto>> getAllPosts(
             @RequestParam(required = false) UUID categoryId,

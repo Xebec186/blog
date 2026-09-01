@@ -9,6 +9,7 @@ import java.util.UUID;
 
 public interface PostService {
     PostDto createPost(CreatePostRequest createPostRequest, UUID userId);
+    PostDto getPost(UUID id);
     List<PostDto> getAllPosts(UUID categoryId, UUID tagId);
     List<PostDto> getUserDraftPosts(UUID userId);
     PostDto updatePost(UUID id, UpdatePostRequest updatePostRequest);
