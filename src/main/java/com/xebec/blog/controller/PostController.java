@@ -2,8 +2,10 @@ package com.xebec.blog.controller;
 
 import com.xebec.blog.dto.CreatePostRequest;
 import com.xebec.blog.dto.PostDto;
+import com.xebec.blog.dto.UpdatePostRequest;
 import com.xebec.blog.security.BlogUserDetails;
 import com.xebec.blog.service.PostService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -41,6 +43,15 @@ public class PostController {
         UUID userId = blogUserDetails.getUser().getId();
         List<PostDto> posts = postService.getUserDraftPosts(userId);
         return ResponseEntity.ok(posts);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PostDto> updatePost(
+            @PathVariable UUID id,
+            @Valid @RequestBody UpdatePostRequest updatePostRequest) {
+       PostDto updatedPost = postService.updatePost(id, updatePostRequest);
+       return ResponseEntity.ok(updatedPost);
+
     }
 
 }

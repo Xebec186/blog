@@ -2,6 +2,7 @@ package com.xebec.blog.service.impl;
 
 import com.xebec.blog.dto.CreatePostRequest;
 import com.xebec.blog.dto.PostDto;
+import com.xebec.blog.dto.UpdatePostRequest;
 import com.xebec.blog.entity.Category;
 import com.xebec.blog.entity.Post;
 import com.xebec.blog.entity.Tag;
@@ -93,6 +94,35 @@ public class PostServiceImpl implements PostService {
                 .stream()
                 .map(postMapper::toDto)
                 .toList();
+    }
+
+    @Override
+    public PostDto updatePost(UUID id, UpdatePostRequest updatePostRequest) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found with given id: " + id));
+
+        UUID categoryId = updatePostRequest.getCategoryId();
+        if(!post.getCategory().getId().equals(categoryId)) {
+            Category newCategory = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Category not found with given id: " + categoryId));
+            post.setCategory(newCategory);
+        }
+
+        Set<UUID> updatePostRequestTagIdsIds = updatePostRequest.getTagIds();
+        Set<UUID> existingTagIds = post.getTags().stream().map(Tag::getId).collect(Collectors.toSet());
+        if(!existingTagIds.equals(updatePostRequestTagIdsIds)) {
+            List<Tag> newTagsList = tagRepository.findAllById(updatePostRequestTagIdsIds);
+            post.setTags(new HashSet<>(newTagsList));
+        }
+
+        post.setTitle(updatePostRequest.getTitle());
+        post.setContent(updatePostRequest.getContent());
+        post.setReadingTime(calculateReadingTime(updatePostRequest.getContent()));
+        post.setStatus(updatePostRequest.getStatus());
+
+        Post updatedPost = postRepository.save(post);
+
+        return postMapper.toDto(updatedPost);
     }
 
     private Integer calculateReadingTime(String content) {
